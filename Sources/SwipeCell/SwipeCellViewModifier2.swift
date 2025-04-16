@@ -39,24 +39,20 @@ extension SwipeCellModifier {
                         .environment(\.cellStatus, status)
                 }
                 .zIndex(3)
-                .highPriorityGesture(
-                    TapGesture(count: 1),
-                    including: currentCellID == nil ? .subviews : .none
-                )
                 .contentShape(Rectangle())
-                //解决Button冲突问题.
-                .onTapGesture(
-                    count: currentCellID != nil ? 1 : 4,
-                    perform: {
+                .highPriorityGesture(
+                    TapGesture(count: 1)
+                    .onEnded {
                         resetStatus()
                         dismissNotification()
-                    }
+                    },
+                    including: currentCellID == nil ? .subviews : .gesture
                 )
                 .offset(x: offset)
             }
         }
         .contentShape(Rectangle())
-        .gesture(getGesture())
+        .myGesture(getGesture())
         .onAppear {
             self.setStatus(status)
             switch status {
@@ -177,4 +173,19 @@ extension SwipeCellModifier {
         NotificationCenter.default.post(name: .swipeCellReset, object: nil)
     }
 
+}
+
+extension View {
+    @ViewBuilder
+    func myGesture(_ g:_EndedGesture<_ChangedGesture<DragGesture>>) -> some View {
+        if #available(iOS 18, *) {
+            #if compiler(>=6.0)
+            highPriorityGesture(g)
+            #else
+            gesture(g)
+            #endif
+        } else {
+            gesture(g)
+        }
+    }
 }
