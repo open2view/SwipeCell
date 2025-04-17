@@ -3,8 +3,8 @@
 
 import Combine
 import Foundation
-import Introspect
 import SwiftUI
+import SwiftUIIntrospect
 import UIKit
 
 /*
@@ -26,9 +26,13 @@ struct ScrollNotificationInject: ViewModifier {
     @ObservedObject var delegate = Delegate()
     func body(content: Content) -> some View {
         content
-            .introspectTableView { list in
-                list.delegate = delegate
-                list.allowsSelection = showSelection
+            .introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
+                tableView.delegate = delegate
+                tableView.allowsSelection = showSelection
+            }
+            .introspect(.list, on: .iOS(.v16, .v17, .v18)) { listView in
+                listView.delegate = delegate as! any UICollectionViewDelegate
+                listView.allowsSelection = showSelection
             }
     }
 }
@@ -61,8 +65,7 @@ struct ScrollNotificationWithoutInject: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .introspectTableView { listView in
-
+            .introspect(.list, on: .iOS(.v13, .v14, .v15)) { listView in
                 self.listView = listView
             }
             .onAppear {
@@ -100,7 +103,7 @@ struct ScrollNotificationForScrollViewInject: ViewModifier {
     @State var offset: CGPoint? = nil
     func body(content: Content) -> some View {
         content
-            .introspectScrollView { scrollView in
+            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15)) { scrollView in
                 self.scrollView = scrollView
             }
             .onAppear {

@@ -131,7 +131,7 @@ HStack{
 * dismissSwipeCellForScrollViewForLazyVStack 用于ScrollView中使用LazyVStack场景.个别时候会打断滑动菜单出现动画.个人觉得如无特别需要还是使用List代替LazyVStack比较好.
 
 
-由于SwiftUI没有很好的方案能够获取滚动状态,所以采用了 [Introspect](https://github.com/siteline/SwiftUI-Introspect.git)实现的上述功能.
+由于SwiftUI没有很好的方案能够获取滚动状态,所以采用了 [SwiftUIIntrospect](https://github.com/siteline/SwiftUI-Introspect.git)实现的上述功能.
 
 destructiveDelay 形式的 button，需要在action中添加 dismissDestructiveDelayButton()已保证在alter执行后，Cell复位
 
